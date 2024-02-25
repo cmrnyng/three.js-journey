@@ -1,26 +1,60 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
-/**
- * Base
- */
+// Textures
+const loadingManager = new THREE.LoadingManager();
+// loadingManager.onStart = () => {
+//   console.log("loading started");
+// };
+// loadingManager.onLoad = () => {
+//   console.log("loading finished");
+// };
+// loadingManager.onProgress = () => {
+//   console.log("loading progressing");
+// };
+// loadingManager.onError = () => {
+//   console.log("loading error");
+// };
+
+const textureLoader = new THREE.TextureLoader(loadingManager);
+const colorTexture = textureLoader.load("/textures/door/color.jpg");
+const alphaTexture = textureLoader.load("/textures/door/alpha.jpg");
+const ambientOcclusionTexture = textureLoader.load(
+  "/textures/door/ambientOcclusion.jpg"
+);
+const heightTexture = textureLoader.load("/textures/door/height.jpg");
+const metalnessTexture = textureLoader.load("/textures/door/metalness.jpg");
+const normalTexture = textureLoader.load("/textures/door/normal.jpg");
+const roughnessTexture = textureLoader.load("/textures/door/roughness.jpg");
+
+// colorTexture.repeat.set(2, 3);
+// colorTexture.wrapS = THREE.RepeatWrapping;
+// colorTexture.wrapT = THREE.RepeatWrapping;
+
+// colorTexture.offset.set(0.5, 0);
+
+// colorTexture.rotation = Math.PI / 8;
+// colorTexture.center.set(0.5, 0.5);
+
+// If using NearestFilter on minFilter, disable mipmap generation
+// colorTexture.generateMipmaps = false;
+// colorTexture.minFilter = THREE.NearestFilter;
+
+// colorTexture.magFilter = THREE.NearestFilter;
+
 // Canvas
 const canvas = document.querySelector("canvas.webgl");
 
 // Scene
 const scene = new THREE.Scene();
 
-/**
- * Object
- */
+// Object
 const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+const material = new THREE.MeshBasicMaterial({ map: colorTexture });
 const mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
 
-/**
- * Sizes
- */
+// Sizes
 const sizes = {
   width: window.innerWidth,
   height: window.innerHeight,
@@ -40,10 +74,7 @@ window.addEventListener("resize", () => {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
 
-/**
- * Camera
- */
-// Base camera
+// Camera
 const camera = new THREE.PerspectiveCamera(
   75,
   sizes.width / sizes.height,
@@ -59,18 +90,14 @@ scene.add(camera);
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 
-/**
- * Renderer
- */
+// Renderer
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
 });
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-/**
- * Animate
- */
+// Animate
 const clock = new THREE.Clock();
 
 const tick = () => {
